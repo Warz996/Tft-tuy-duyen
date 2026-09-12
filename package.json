@@ -1,0 +1,8 @@
+{
+  "name": "tft-tuy-duyen",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Static TFT Checkmate tracker with Supabase admin and spectator rooms",
+  "scripts": {"test": "node tests/test.cjs && node tests/live.cjs && node tests/security.cjs"},
+  "devDependencies": {"@electric-sql/pglite": "0.5.8"}
+}

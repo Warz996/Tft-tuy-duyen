@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="vi">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#080f20"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+ <title>Trực tiếp · Giải tùy duyên</title><link rel="stylesheet" href="style.css">
+ <script src="config.js" defer></script><script src="score-engine.js" defer></script><script src="cloud-client.js" defer></script><script src="watch.js" defer></script>
+</head>
+<body>
+ <header class="masthead"><div class="brand"><span class="brand-icon">🐳</span><span>Giải tùy duyên<small>LIVE SCOREBOARD</small></span></div><span class="pill cyan">CHỈ XEM</span></header>
+ <main class="shell watch-shell">
+  <div class="section-heading watch-header"><div><p class="eyebrow">CÙNG THEO DÕI · CÙNG CỔ VŨ</p><h1 id="watchTitle">Bảng điểm trực tiếp</h1></div><span class="pill" id="connectionStatus" role="status">Đang kết nối…</span></div>
+  <p class="watch-notice" id="watchNotice" role="status">Đang tải giải đấu…</p>
+  <div id="watchContent" hidden>
+   <div class="stats" id="watchStats"></div>
+   <div class="winner-banner" id="watchWinner" hidden></div>
+   <section class="card watch-board"><div class="card-heading"><h2>Bảng xếp hạng</h2><span class="pill cyan" id="watchRule"></span></div><div id="watchLeaders"></div><p class="footnote">Đồng điểm: Top 1 → Top 4 → thứ hạng trung bình. Đủ ngưỡng trước ván và giành Top 1 mới vô địch Checkmate.</p></section>
+   <section class="card history-card"><div class="card-heading"><h2>Lịch sử ván đấu</h2><span id="watchUpdated" class="muted compact"></span></div><div class="table-scroll" id="watchHistory"></div></section>
+  </div>
+  <footer><span>🐳 Chơi hết mình. Còn lại tùy duyên.</span><span>Điểm do Admin cập nhật · Không cần tải lại trang</span></footer>
+ </main>
+ <noscript>Bật JavaScript để theo dõi bảng điểm.</noscript>
+</body>
+</html>

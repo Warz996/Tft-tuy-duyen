@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f20">
+  <meta name="description" content="Giải tùy duyên — quản lý điểm TFT Checkmate và chia team ngẫu nhiên. Miễn phí, chạy ngay trên trình duyệt.">
+  <title>Giải tùy duyên · TFT Companion</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='85'%3E🐳%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js" defer></script>
+  <script src="score-engine.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="cloud-client.js" defer></script>
+  <script src="live-admin.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <header class="masthead">
+    <a class="brand" href="#tournament" aria-label="Giải tùy duyên, trang chính"><span class="brand-icon" aria-hidden="true">🐳</span><span>Giải tùy duyên<small>TFT COMPANION</small></span></a>
+    <div class="header-right"><span id="saveStatus" class="save-status" role="status">Lưu trên trình duyệt</span><button id="presentationBtn" class="quiet" title="Ẩn phần nhập để trình chiếu bảng điểm">▣ <span>Trình chiếu</span></button></div>
+  </header>
+  <main id="main" class="shell">
+    <div class="hero"><div><p class="eyebrow">CHƠI HẾT MÌNH. CÒN LẠI TÙY DUYÊN.</p><h1>Mỗi ván đấu, <span>một cơ hội.</span></h1><p class="muted">Theo dõi điểm, chạm Checkmate, tìm nhà vô địch.</p></div><div class="hero-seal" aria-hidden="true"><span>♜</span><small>GOOD LUCK · HAVE FUN</small></div></div>
+    <nav class="tabbar" aria-label="Chức năng"><a href="#tournament" id="tabTournament" class="tab active" aria-current="page">♜ <span>Giải đấu Checkmate</span></a><a href="#teams" id="tabTeams" class="tab">⚄ <span>Chia team ngẫu nhiên</span></a><span class="tab-note">YOUR LOBBY. YOUR RULES.</span></nav>
+
+    <section class="card live-panel editor" aria-label="Phát bảng điểm trực tiếp">
+      <div class="card-heading"><div><p class="eyebrow">LIVE SCOREBOARD</p><h3>Chia sẻ giải đấu</h3></div><span id="liveStatus" class="pill" role="status">Chưa kết nối</span></div>
+      <p id="liveHelp" class="muted compact">Đăng nhập Admin để phát bảng điểm. Người xem mở link, không cần tài khoản.</p>
+      <form id="loginForm" class="login-row"><div><label for="adminEmail">Email Admin</label><input id="adminEmail" type="email" autocomplete="username" required></div><div><label for="adminPassword">Mật khẩu</label><input id="adminPassword" type="password" autocomplete="current-password" required></div><button id="loginBtn" class="primary" type="submit">Đăng nhập Admin</button></form>
+      <div id="liveControls" hidden><p id="adminIdentity" class="muted compact"></p><div class="actions"><button id="publishBtn" class="primary">Phát giải hiện tại</button><button id="pauseLiveBtn" class="quiet" disabled>Tạm dừng chia sẻ</button><button id="retryLiveBtn" class="quiet" disabled>Thử đồng bộ lại</button><button id="logoutBtn" class="quiet">Đăng xuất</button></div>
+      <div id="shareBox" hidden><label for="watchLink">Link chỉ xem — gửi link này vào server</label><div class="share-row"><input id="watchLink" readonly><button id="copyWatchBtn" class="quiet">Sao chép link</button><a id="openWatchLink" class="pill cyan" target="_blank" rel="noopener noreferrer">Mở trang xem ↗</a></div></div>
+      <div class="share-row"><label for="ownedRooms">Giải đã lưu</label><select id="ownedRooms"><option value="">Chọn giải của bạn…</option></select><button id="refreshRoomsBtn" class="quiet">Làm mới</button><button id="loadRoomBtn" class="quiet">Mở để quản lý</button></div></div>
+      <p id="liveError" class="error compact" role="alert"></p>
+    </section>
+    <section id="tournamentPage" aria-labelledby="tabTournament">
+      <div class="section-heading"><div><p class="eyebrow">TOURNAMENT ROOM</p><h2 id="tournamentTitle">Sẵn sàng vào lobby?</h2></div><div class="actions editor"><button id="demoBtn" class="quiet">Thử dữ liệu mẫu</button><button id="newBtn" class="primary">＋ Tạo giải đấu</button></div></div>
+      <div class="stats" id="stats"></div>
+      <div id="emptyTournament" class="card empty-lobby"><span class="empty-icon" aria-hidden="true">🐳</span><h2>Đủ hội rồi, mở giải thôi.</h2><p>Thêm 2–8 người chơi, chọn ngưỡng Checkmate<br>và để bảng điểm lo phần còn lại.</p><button id="emptyStartBtn" class="primary">＋ Tạo giải đầu tiên</button><small>Điểm mặc định: Top 1 → 8 điểm · Top 8 → 1 điểm</small></div>
+      <div id="activeTournament" hidden>
+        <div id="winnerBanner" class="winner-banner" role="status" hidden></div>
+        <div class="competition-grid">
+          <section class="card leaderboard-card"><div class="card-heading"><div><p class="eyebrow">THE CLIMB</p><h3>Bảng xếp hạng</h3></div><span class="pill cyan" id="thresholdBadge"></span></div><div id="leaderboard"></div><p class="footnote">Đồng điểm: số Top 1 → số Top 4 → thứ hạng TB. Còn bằng nhau: đồng hạng.</p><div class="card-footer editor"><button id="copyBoardBtn" class="quiet">⧉ Sao chép BXH</button><button id="csvBtn" class="quiet">↓ Xuất CSV</button></div></section>
+          <section class="card editor round-card"><div class="card-heading"><div><p class="eyebrow" id="roundEyebrow">NEXT ROUND</p><h3 id="roundTitle">Kết quả ván 1</h3></div><span id="draftStatus" class="pill"></span></div><p class="muted compact" id="roundHelp">Chọn thứ hạng cho từng người. Điểm chỉ được tính khi chốt ván.</p><div class="table-scroll" id="placementGrid"></div><div class="round-bottom"><span id="roundHint" class="muted"></span><div class="actions"><button id="clearDraftBtn" class="quiet">Xóa lựa chọn</button><button id="cancelEditBtn" class="quiet" hidden>Hủy sửa</button><button id="commitRoundBtn" class="primary">Chốt ván đấu →</button></div></div></section>
+        </div>
+        <section class="card history-card"><div class="card-heading"><div><p class="eyebrow">MATCH LOG</p><h3>Lịch sử & phong độ</h3></div><button id="undoBtn" class="quiet editor">↶ Hoàn tác</button></div><div id="history" class="table-scroll"></div><div id="adjustmentLog"></div></section>
+      </div>
+      <details class="card rules"><summary>Luật giải & cách sử dụng <span>＋</span></summary><div id="rulesText"></div></details>
+      <div class="data-tools editor"><p class="muted">Dữ liệu nằm trên thiết bị này. Xuất bản sao để chuyển máy hoặc giữ dự phòng.</p><div class="actions"><button id="exportBtn" class="quiet">↓ Sao lưu JSON</button><button id="importBtn" class="quiet">↑ Khôi phục JSON</button><input id="importFile" type="file" accept=".json,application/json" hidden></div></div>
+    </section>
+
+    <section id="teamsPage" aria-labelledby="tabTeams" hidden>
+      <div class="section-heading"><div><p class="eyebrow">THE SHUFFLE ROOM</p><h2>Chung một team, chung một duyên.</h2><p class="muted">Từ hội bạn nhỏ đến cả giải đấu. Chia đều, chọn ngẫu nhiên.</p></div><span class="pill cyan">2–5 TEAM</span></div>
+      <div class="teams-layout"><section class="card team-settings"><div class="card-heading"><h3>Danh sách tham gia</h3><span id="teamCountBadge" class="pill">0 người</span></div>
+        <label for="teamMode">Cách nhập</label><select id="teamMode"><option value="names">Nhập tên người chơi</option><option value="count">Nhập số lượng người chơi</option></select>
+        <div id="namesMode"><label for="teamNames">Mỗi người một dòng</label><textarea id="teamNames" rows="9" maxlength="12200" placeholder="Warz&#10;Coldie&#10;Smore&#10;Hoàng Anh"></textarea><button id="useRosterBtn" class="text-button">↗ Lấy danh sách từ giải đang chơi</button></div>
+        <div id="countMode" hidden><label for="playerCount">Số người chơi (2–200)</label><input id="playerCount" type="number" min="2" max="200" value="16"><p class="muted compact">Tự đặt tên “Người chơi 01, 02…” để bạn bốc số.</p></div>
+        <label for="teamNumber">Chia thành</label><select id="teamNumber"><option value="2">2 team</option><option value="3">3 team</option><option value="4">4 team</option><option value="5">5 team</option></select>
+        <label class="checkbox"><input id="captains" type="checkbox" checked> Chọn ngẫu nhiên 1 đội trưởng mỗi team</label><p id="teamValidation" class="input-status" role="status"></p><button id="shuffleBtn" class="primary full">⚄ Chia team ngẫu nhiên</button><p class="footnote">Số thành viên giữa các team chênh tối đa 1. Mỗi lượt bốc là độc lập.</p>
+      </section><section class="team-results"><div class="result-toolbar"><h3>Kết quả bốc thăm</h3><button id="copyTeamsBtn" class="quiet" disabled>⧉ Sao chép team</button></div><div id="teamResults"></div></section></div>
+    </section>
+    <footer><span>🐳 Giải tùy duyên <span class="muted">/ Made for your lobby.</span></span><span>Công cụ cộng đồng · Không thuộc Riot Games</span></footer>
+  </main>
+
+  <dialog id="setupDialog"><form id="setupForm"><div class="card-heading"><div><p class="eyebrow">NEW TOURNAMENT</p><h2>Tạo giải đấu</h2></div><button type="button" class="icon-button" data-close="setupDialog" aria-label="Đóng">✕</button></div><label for="setupTitle">Tên giải</label><input id="setupTitle" maxlength="80" value="Giải tùy duyên" required><label for="playersInput">Người chơi · mỗi người một dòng (2–8)</label><textarea id="playersInput" rows="6" maxlength="500" placeholder="Warz&#10;Coldie&#10;Smore&#10;Hoàng Anh" required></textarea><div class="form-grid"><div><label for="threshold">Ngưỡng Checkmate</label><input id="threshold" type="number" value="20" min="1" max="1000" required></div><div><label for="winMode">Cách thắng</label><select id="winMode"><option value="checkmate">Đủ ngưỡng → Top 1 ván sau</option><option value="points">Chỉ xếp hạng theo điểm</option></select></div></div><label>Điểm theo thứ hạng</label><div id="scoreInputs" class="score-inputs"></div><p class="footnote">Luật được cố định khi tạo giải. Bạn vẫn có thể chỉnh điểm từng người trong BXH.</p><p id="setupError" class="input-status error" role="alert"></p><button type="submit" class="primary full">Bắt đầu giải đấu →</button></form></dialog>
+  <dialog id="adjustDialog"><form id="adjustForm"><div class="card-heading"><h2>Điều chỉnh điểm</h2><button type="button" class="icon-button" data-close="adjustDialog" aria-label="Đóng">✕</button></div><p id="adjustPlayer"></p><label for="adjustScore">Đặt tổng điểm mới</label><input id="adjustScore" type="number" min="-1000000" max="1000000" required><label for="adjustReason">Lý do điều chỉnh</label><input id="adjustReason" maxlength="120" placeholder="Ví dụ: điểm khởi đầu, sửa điểm, phạt giải" required><p class="footnote">Ghi lại phần điểm cộng/trừ tại thời điểm này. Không thay đổi kết quả các ván trước.</p><p id="adjustError" class="error" role="alert"></p><button class="primary full" type="submit">Lưu điều chỉnh</button></form></dialog>
+  <dialog id="confirmDialog"><h2 id="confirmTitle">Xác nhận</h2><p id="confirmText"></p><div class="actions dialog-actions"><button id="confirmNo" class="quiet">Hủy</button><button id="confirmYes" class="primary">Tiếp tục</button></div></dialog>
+  <dialog id="copyDialog"><div class="card-heading"><h2>Sao chép nội dung</h2><button class="icon-button" data-close="copyDialog" aria-label="Đóng">✕</button></div><p class="muted">Chọn và sao chép nội dung bên dưới.</p><textarea id="copyText" rows="14" readonly></textarea></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <noscript>Bạn cần bật JavaScript để sử dụng bảng điểm và chia team.</noscript>
+</body>
+</html>
