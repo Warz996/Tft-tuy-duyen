@@ -2,7 +2,7 @@
 (function(root){
   'use strict';
   class CloudClient {
-    constructor(config, fetcher=fetch){
+    constructor(config, fetcher=root.fetch.bind(root)){
       this.config=config||{};this.fetcher=fetcher;this.session=null;this.refreshing=null;
     }
     configured(){
